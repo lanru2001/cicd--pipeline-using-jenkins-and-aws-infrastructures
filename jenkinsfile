@@ -1,0 +1,65 @@
+#!groovy
+
+currentBuild.displayName="Online-image-#"+currentBuild.number
+pipeline {
+   agent any 
+   environment {
+       PATH="/opt/maven/bin:$PATH"
+               }
+   stages{
+       stage("SCM checkout") {
+           steps {
+               git credentialsId "https://github.com/lanru2001/my-web-page.git"
+                  }
+               }
+           
+       stage("Maven Build") {
+           steps {
+               sh "mvn clean package"  
+                 
+                 }
+              }
+       stage("Deploy-Dev"){
+           steps{
+               sshagent(){
+                   sh "scp -o StrictHostKeyChecking=no webapp/target/webapp.war  ec2-user@18.221.190.93:/opt/tomcat/webapps/"
+                           
+              }
+           }
+       }       
+              
+    }     
+}
+
+
+
+
+# Set up CloudWatch group and log stream and retain logs for 30 days
+resource "aws_cloudwatch_log_group" "cb_log_group" {
+  name              = "/ecs/cb-app"
+  retention_in_days = 30
+
+  tags = {
+    Name = "cb-log-group"
+  }
+}
+
+resource "aws_cloudwatch_log_stream" "cb_log_stream" {
+  name           = "cb-log-stream"
+  log_group_name = aws_cloudwatch_log_group.cb_log_group.name
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
