@@ -1,5 +1,4 @@
 #!groovy
-
 currentBuild.displayName="Online-image-#"+currentBuild.number
 pipeline {
    agent any 
