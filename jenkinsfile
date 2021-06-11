@@ -8,7 +8,7 @@ pipeline {
    stages{
        stage("SCM checkout") {
            steps {
-               git credentialsId "https://github.com/lanru2001/my-web-page.git"
+               git credentialsId "https://github.com/lanru2001/cicd-pipeline-using-jenkins-and-aws-infrastructures/blob/master/jenkinsfile"
             }
        }
            
